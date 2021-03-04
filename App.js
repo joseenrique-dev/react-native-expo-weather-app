@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import * as Location from "expo-location";
 import WeatherInfo from "./components/WeatherInfo";
+import weatherMockData from "./mock/mockWeatherData";
+
 const api = {
   key: "a9748d82dade1958fd30abf90c326c8f",
   base:"https://api.openweathermap.org/data/2.5/weather?"
@@ -32,13 +34,14 @@ const [ dataCurrentWeather, setdataCurrentWeather ] = useState(null);
 
       const { latitude, longitude } = locationAsync.coords;
       
-      const weatherUrl = `${api.base}lat=${latitude}&lon=${longitude}&appid=${api.key}`
+       const weatherUrl = `${api.base}lat=${latitude}&lon=${longitude}&appid=${api.key}`
       
-      console.log('urll', weatherUrl);
-      const response = await fetch(weatherUrl);
-      const result = await response.json();
+      // const response = await fetch(weatherUrl);
+      // const result = await response.json();
+
+      const result = weatherMockData;
       
-      if( response.ok ){
+      if( 1==1 ){//response.ok
         setdataCurrentWeather(result);
         console.log('DATA-->', result);
       }else{
