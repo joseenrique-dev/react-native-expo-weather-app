@@ -1,4 +1,4 @@
-export default weatherMockData= {
+export const weatherMockData= {
     "base": "stations",
     "clouds": {
       "all": 1,
