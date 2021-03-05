@@ -1,6 +1,10 @@
 import React from 'react'
 import { View, Text, StyleSheet, Image } from 'react-native'
 import mockImage from '../assets/icon.png'
+import { colors } from '../utils/index';
+
+//Defining general app colors
+const { PRIMARY_COLOR, SECONDARY_COLOR } = colors;
 
 export default function WeatherInfo({dataWeatherInfo}) {
     const {
@@ -9,6 +13,8 @@ export default function WeatherInfo({dataWeatherInfo}) {
         name
     } = dataWeatherInfo;
 
+
+    //From Api Weather Request.
     const { icon, main, description } =  details;
 
     // const iconUrl = `https://openweathermap.org/img/wn/${icon}@4x.png`;
@@ -24,8 +30,9 @@ export default function WeatherInfo({dataWeatherInfo}) {
             />
                 {/* source={{uri:mockImage}} */}
 
-            <Text>{temp}</Text>
+            <Text style={style.textPrimary}>{temp}°</Text>
             <Text style={style.weatherDescription}>{description}</Text>
+            <Text style={style.textSecondary}>{main}</Text>
         </View>
     )
 }
@@ -40,5 +47,15 @@ const style = StyleSheet.create({
     },
     weatherDescription:{
         textTransform:'uppercase'
+    },
+    textPrimary:{
+        fontSize: 40,
+        color: PRIMARY_COLOR
+    },
+    textSecondary:{
+        fontSize:20,
+        color:SECONDARY_COLOR,
+        fontWeight:'500',
+        marginTop: 10
     }
 });
