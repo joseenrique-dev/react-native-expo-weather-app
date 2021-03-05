@@ -17,7 +17,7 @@ export default function WeatherInfo({dataWeatherInfo}) {
     //From Api Weather Request.
     const { icon, main, description } =  details;
 
-    // const iconUrl = `https://openweathermap.org/img/wn/${icon}@4x.png`;
+    const iconUrl = `https://openweathermap.org/img/wn/${icon}@4x.png`;
     const iconUrl = ``;
     
     
@@ -26,9 +26,10 @@ export default function WeatherInfo({dataWeatherInfo}) {
             <Text>{name}</Text>
             <Image 
                 style={style.weatherIcon}
-                source={mockImage}
+                source={{uri:mockImage}}
+                
             />
-                {/* source={{uri:mockImage}} */}
+                {/* source={mockImage} */}
 
             <Text style={style.textPrimary}>{temp}°</Text>
             <Text style={style.weatherDescription}>{description}</Text>

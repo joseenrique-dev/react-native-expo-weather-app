@@ -8,9 +8,10 @@ import UnitsPicker from "./components/UnitsPicker";
 import { colors } from "./utils/index";
 import ReloadIcon from "./components/ReloadIcon";
 import WeatherDetails from "./components/WeatherDetails";
+import { WEATHER_API_KEY } from 'react-native-dotenv'
 
 const api = {
-  key: "a9748d82dade1958fd30abf90c326c8f",
+  key: WEATHER_API_KEY,
   base:"https://api.openweathermap.org/data/2.5/weather?"
 }
 
@@ -20,10 +21,8 @@ export default function App() {
   const [ dataCurrentWeather, setdataCurrentWeather ] = useState(null);
   const [ unitsSystem, setUnitsSystem] = useState('metric');
 
-  useEffect(() => {
-    
-    load();
-    
+  useEffect(() => {    
+    load();    
   }, [unitsSystem])
 
   async function load(){
@@ -44,14 +43,13 @@ export default function App() {
       
        const weatherUrl = `${api.base}lat=${latitude}&lon=${longitude}&units=${unitsSystem}&appid=${api.key}`
       
-      // const response = await fetch(weatherUrl);
-      // const result = await response.json();
+      const response = await fetch(weatherUrl);
+      const result = await response.json();
 
       const result = weatherMockData;
       
-      if( 1==1 ){//response.ok
+      if( response.ok ){
         setdataCurrentWeather(result);
-        console.log('DATA-->', result);
       }else{
         setErrorMessage(result.message);
       }
@@ -76,13 +74,17 @@ export default function App() {
             dataWeatherInfo={dataCurrentWeather} 
           />
         </View>
-        <WeatherDetails currentWeather={dataCurrentWeather}/>
+        <WeatherDetails 
+          currentWeather={dataCurrentWeather}
+          unitsSystem={unitsSystem}
+        />
       </View>
     );
   } else if( errorMessage ){
     return (
       <View style={styles.container}>
-        <Text>{errorMessage}</Text>
+        <ReloadIcon load={load}/>
+        <Text style={{textAlign:'center'}}>{errorMessage}</Text>
         <StatusBar style="auto" />
       </View>
     );

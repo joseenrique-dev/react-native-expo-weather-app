@@ -4,23 +4,57 @@ import { colors } from "../utils/index";
 import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
 
 const { PRIMARY_COLOR, SECONDARY_COLOR, BORDER_COLOR } = colors;
-export default function WeatherDetails({ currentWeather }) {
+export default function WeatherDetails({ currentWeather, unitsSystem }) {
 
     const {
-        feels_like,
-        humidity
+        main:{ feels_like, humidity, pressure},
+        wind: { speed }
     } = currentWeather;
+
+    const windSpeed = unitsSystem === 'metric' ? 
+                        `${ Math.round(speed) } m/s` :
+                        `${ Math.round(speed) } miles/h`
+
     return (
         <View style={styles.weatherDetails}>
             <View style={styles.weatherDetailsRow}>
                 <View style={{...styles.weatherDetailsBox,borderRightWidth:1, borderRightColor:BORDER_COLOR}}>
                     <View style={styles.weatherDetailsRow}>
-                        <FontAwesome5 name="temperature_low" color={PRIMARY_COLOR}/>
-                        <Text>{feels_like}</Text>
+                        <FontAwesome5 name="temperature-low" color={PRIMARY_COLOR} size={25}/>
+                        <View style={styles.weatherDetailsItem}>
+                            <Text>Feels like:</Text>
+                            <Text style={styles.textSecondary}>{feels_like} °</Text>
+                        </View>
                     </View>
                 </View>
                 <View style={styles.weatherDetailsBox}>
-                    <Text>{humidity}</Text>
+                    <View style={styles.weatherDetailsRow}>
+                        <MaterialCommunityIcons name="water" color={PRIMARY_COLOR} size={30}/>
+                        <View style={styles.weatherDetailsItem}>
+                            <Text>Humidity:</Text>
+                            <Text style={styles.textSecondary}>{humidity} %</Text>
+                        </View>
+                    </View>
+                </View>
+            </View>
+            <View style={{...styles.weatherDetailsRow,borderTopWidth:1,borderTopColor:BORDER_COLOR}}>
+                <View style={{...styles.weatherDetailsBox,borderRightWidth:1, borderRightColor:BORDER_COLOR}}>
+                    <View style={styles.weatherDetailsRow}>
+                        <MaterialCommunityIcons name="weather-windy" color={PRIMARY_COLOR} size={30}/>
+                        <View style={styles.weatherDetailsItem}>
+                            <Text>Wind Speed:</Text>
+                            <Text style={styles.textSecondary}>{windSpeed}</Text>
+                        </View>
+                    </View>
+                </View>
+                <View style={styles.weatherDetailsBox}>
+                    <View style={styles.weatherDetailsRow}>
+                        <MaterialCommunityIcons name="speedometer" color={PRIMARY_COLOR} size={30}/>
+                        <View style={styles.weatherDetailsItem}>
+                            <Text>Preasure:</Text>
+                            <Text style={styles.textSecondary}>{pressure} hPa</Text>
+                        </View>
+                    </View>
                 </View>
             </View>
         </View>
@@ -43,5 +77,15 @@ const styles = StyleSheet.create({
     weatherDetailsBox:{
         flex:1,
         padding:20
+    },
+    weatherDetailsItem:{
+        alignItems:'flex-end',
+        justifyContent:'flex-end'
+    },
+    textSecondary:{
+        fontSize: 15,
+        color:SECONDARY_COLOR,
+        fontWeight:'700',
+        margin:7
     }
 });
