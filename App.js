@@ -1,9 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
 import * as Location from "expo-location";
 import WeatherInfo from "./components/WeatherInfo";
-import weatherMockData from "./mock/mockWeatherData";
+import { weatherMockData } from "./mock/mockWeatherData";
+import UnitsPicker from "./components/UnitsPicker";
+import { colors } from "./utils/index";
+import ReloadIcon from "./components/ReloadIcon";
+import WeatherDetails from "./components/WeatherDetails";
 
 const api = {
   key: "a9748d82dade1958fd30abf90c326c8f",
@@ -13,14 +17,18 @@ const api = {
 
 export default function App() {
   const [ errorMessage, setErrorMessage ] = useState(null);
-const [ dataCurrentWeather, setdataCurrentWeather ] = useState(null);
+  const [ dataCurrentWeather, setdataCurrentWeather ] = useState(null);
+  const [ unitsSystem, setUnitsSystem] = useState('metric');
+
   useEffect(() => {
     
     load();
     
-  }, [])
+  }, [unitsSystem])
 
   async function load(){
+    setdataCurrentWeather(null);
+    setErrorMessage(null);
     try {
       //ask for permissions.
       let { status } = await Location.requestPermissionsAsync();
@@ -34,7 +42,7 @@ const [ dataCurrentWeather, setdataCurrentWeather ] = useState(null);
 
       const { latitude, longitude } = locationAsync.coords;
       
-       const weatherUrl = `${api.base}lat=${latitude}&lon=${longitude}&appid=${api.key}`
+       const weatherUrl = `${api.base}lat=${latitude}&lon=${longitude}&units=${unitsSystem}&appid=${api.key}`
       
       // const response = await fetch(weatherUrl);
       // const result = await response.json();
@@ -55,18 +63,34 @@ const [ dataCurrentWeather, setdataCurrentWeather ] = useState(null);
   }
   if( dataCurrentWeather ){
 
-    const { main: {temp}} = dataCurrentWeather;
-
     return (
       <View style={styles.container}>
-        <WeatherInfo dataWeatherInfo={dataCurrentWeather} />
         <StatusBar style="auto" />
+        <View style={styles.main}>
+          <UnitsPicker 
+            unitsSystem={unitsSystem}
+            setUnitsSystem={setUnitsSystem}
+          />
+          <ReloadIcon load={load}/>
+          <WeatherInfo 
+            dataWeatherInfo={dataCurrentWeather} 
+          />
+        </View>
+        <WeatherDetails currentWeather={dataCurrentWeather}/>
       </View>
     );
-  } else{
+  } else if( errorMessage ){
     return (
       <View style={styles.container}>
         <Text>{errorMessage}</Text>
+        <StatusBar style="auto" />
+      </View>
+    );
+  }
+  else{
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color={colors.PRIMARY_COLOR}/>
         <StatusBar style="auto" />
       </View>
     );
@@ -76,9 +100,10 @@ const [ dataCurrentWeather, setdataCurrentWeather ] = useState(null);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize:20
+    justifyContent: 'center'
   },
+  main:{
+    flex: 1,
+    justifyContent:'center'
+  }
 });

@@ -7,7 +7,10 @@ export default function UnitsPicker({ unitsSystem, setUnitsSystem }) {
         <View style={styles.unitsSystem}>
             <Picker 
                 selectedValue={unitsSystem}
-                onValueChange={( item )=>setUnitsSystem(item)}>
+                onValueChange={( item )=>setUnitsSystem(item)}
+                mode="dropdown"
+                itemStyle={{fontSize: 12}}
+            >
                 <Picker.Item label="C°" value="metric"/>
                 <Picker.Item label="F°" value="imperial"/>
             </Picker>
@@ -20,10 +23,10 @@ const styles = StyleSheet.create({
         position:'absolute',
         ...Platform.select({
             ios:{
-                top:-20,
+                top:-30,
             },
             android:{
-                top:20,
+                top:30,
             }
         }),
         
